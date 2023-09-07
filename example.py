@@ -49,8 +49,8 @@ def tokens_lowercase(doc):
     # Analyze the document to produce trigrams
     trigrams = ana.analyze(doc)
     
-    # Extract tokens from the trigrams
-    tokens = [token for token, _ in trigrams]
+    # Extract tokens from the trigrams and join them into a single string
+    tokens = [" ".join(gram) for gram in trigrams]
     
     return tokens
     
