@@ -1,19 +1,41 @@
 import metapy
 
+# def tokens_lowercase(doc):
+#     #Write a token stream that tokenizes with ICUTokenizer (use the argument "suppress_tags=True"), 
+#     #lowercases, removes words with less than 2 and more than 5  characters
+#     #performs stemming and creates trigrams (name the final call to ana.analyze as "trigrams")
+#     '''Place your code here'''
+    
+#     #leave the rest of the code as is
+#     tok.set_content(doc.content())
+#     tokens, counts = [], []
+#     for token, count in trigrams.items():
+#         counts.append(count)
+#         tokens.append(token)
+#     return tokens
+
 def tokens_lowercase(doc):
-    #Write a token stream that tokenizes with ICUTokenizer (use the argument "suppress_tags=True"), 
-    #lowercases, removes words with less than 2 and more than 5  characters
-    #performs stemming and creates trigrams (name the final call to ana.analyze as "trigrams")
-    '''Place your code here'''
-    
-    #leave the rest of the code as is
+    # Create an ICUTokenizer with suppress_tags=True
+    tok = metapy.analyzers.ICUTokenizer(suppress_tags=True)
     tok.set_content(doc.content())
-    tokens, counts = [], []
-    for token, count in trigrams.items():
-        counts.append(count)
-        tokens.append(token)
+
+    # Create a LengthFilter to remove words with less than 2 and more than 5 characters
+    tok = metapy.analyzers.LengthFilter(tok, min=2, max=5)
+
+    # Create a Porter2Filter for stemming
+    tok = metapy.analyzers.Porter2Filter(tok)
+
+    # Create an NGramWordAnalyzer for trigrams
+    ana = metapy.analyzers.NGramWordAnalyzer(3, tok)
+
+    # Analyze the document to produce trigrams
+    trigrams = ana.analyze(doc)
+
+    # Extract tokens from the trigrams
+    tokens = [token for token, _ in trigrams]
+
     return tokens
-    
+
 if __name__ == '__main__':
     doc = metapy.index.Document()
     doc.content("I said that I can't believe that it only costs $19.95! I could only find it for more than $30 before.")
