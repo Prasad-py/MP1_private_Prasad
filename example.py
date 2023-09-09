@@ -33,25 +33,19 @@ def tokens_lowercase(doc):
     and generates trigrams.
     '''
 
-    # Create an ICUTokenizer with suppress_tags=True
     tok = metapy.analyzers.ICUTokenizer(suppress_tags=True)
-    tok.set_content(doc.content())
-    
-    # Create a LengthFilter to remove words with less than 2 and more than 5 characters
+    tok = metapy.analyzers.LowercaseFilter(tok)
     tok = metapy.analyzers.LengthFilter(tok, min=2, max=5)
-    
-    # Create a Porter2Filter for stemming
     tok = metapy.analyzers.Porter2Filter(tok)
-    
-    # Create an NGramWordAnalyzer for trigrams
     ana = metapy.analyzers.NGramWordAnalyzer(3, tok)
-    
-    # Analyze the document to produce trigrams
     trigrams = ana.analyze(doc)
-    
-    # Extract tokens from the trigrams and join them into a single string
-    tokens = [" ".join(gram) for gram in trigrams]
-    
+
+    #leave the rest of the code as is
+    tok.set_content(doc.content())
+    tokens, counts = [], []
+    for token, count in trigrams.items():
+        counts.append(count)
+        tokens.append(token)
     return tokens
     
 if __name__ == '__main__':
